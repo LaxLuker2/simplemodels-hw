@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
@@ -9,35 +9,35 @@ const DogSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true
+    unique: true,
   },
 
   breed: {
     type: String,
-    required: true
+    required: true,
   },
 
   age: {
     type: Number,
     min: 0,
-    required: true
+    required: true,
   },
 
   createdData: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 DogSchema.statics.findByName = (name, callback) => {
   const search = {
-    name
+    name,
   };
 
   return DogModel.findOne(search, callback);
 };
 
-DogModel = mongoose.model("Dog", DogSchema);
+DogModel = mongoose.model('Dog', DogSchema);
 
 // export our public properties
 module.exports.DogModel = DogModel;
