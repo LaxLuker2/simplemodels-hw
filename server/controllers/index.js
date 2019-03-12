@@ -1,13 +1,13 @@
 // pull in our models. This will automatically load the index.js from that folder
-const models = require('../models');
+const models = require("../models");
 
 // get the Cat model
 const Cat = models.Cat.CatModel;
 
 // default fake data so that we have something to work with until we make a real Cat
 const defaultData = {
-  name: 'unknown',
-  bedsOwned: 0,
+  name: "unknown",
+  bedsOwned: 0
 };
 
 // object for us to keep track of the last Cat we made and dynamically update it sometimes
@@ -23,10 +23,10 @@ const hostIndex = (req, res) => {
   // file type in the app.js as jade. Calling res.render('index')
   // actually calls index.jade. A second parameter of JSON can be passed
   // into the jade to be used as variables with #{varName}
-  res.render('index', {
+  res.render("index", {
     currentName: lastAdded.name,
-    title: 'Home',
-    pageName: 'Home Page',
+    title: "Home",
+    pageName: "Home Page"
   });
 };
 
@@ -42,7 +42,6 @@ const readAllCats = (req, res, callback) => {
   // The find function returns an array of matching objects
   Cat.find(callback);
 };
-
 
 // function to find a specific cat on request.
 // Express functions always receive the request and the response.
@@ -80,7 +79,7 @@ const hostPage1 = (req, res) => {
     }
 
     // return success
-    return res.render('page1', { cats: docs });
+    return res.render("page1", { cats: docs });
   };
 
   readAllCats(req, res, callback);
@@ -96,20 +95,20 @@ const hostPage2 = (req, res) => {
   // the file type in the app.js as jade. Calling res.render('index')
   // actually calls index.jade. A second parameter of JSON can be
   // passed into the jade to be used as variables with #{varName}
-  res.render('page2');
+  res.render("page2");
 };
 
 // function to handle requests to the page3 page
 // controller functions in Express receive the full HTTP request
 // and a pre-filled out response object to send
 const hostPage3 = (req, res) => {
-    // res.render takes a name of a page to render.
-    // These must be in the folder you specified as views in your main app.js file
-    // Additionally, you don't need .jade because you registered the file type
-    // in the app.js as jade. Calling res.render('index')
-    // actually calls index.jade. A second parameter of JSON can be passed
-    // into the jade to be used as variables with #{varName}
-  res.render('page3');
+  // res.render takes a name of a page to render.
+  // These must be in the folder you specified as views in your main app.js file
+  // Additionally, you don't need .jade because you registered the file type
+  // in the app.js as jade. Calling res.render('index')
+  // actually calls index.jade. A second parameter of JSON can be passed
+  // into the jade to be used as variables with #{varName}
+  res.render("page3");
 };
 
 // function to handle get request to send the name
@@ -134,7 +133,9 @@ const setName = (req, res) => {
   if (!req.body.firstname || !req.body.lastname || !req.body.beds) {
     // if not respond with a 400 error
     // (either through json or a web page depending on the client dev)
-    return res.status(400).json({ error: 'firstname,lastname and beds are all required' });
+    return res
+      .status(400)
+      .json({ error: "firstname,lastname and beds are all required" });
   }
 
   // if required fields are good, then set name
@@ -143,7 +144,7 @@ const setName = (req, res) => {
   // dummy JSON to insert into database
   const catData = {
     name,
-    bedsOwned: req.body.beds,
+    bedsOwned: req.body.beds
   };
 
   // create a new object of CatModel with the object to save
@@ -166,7 +167,6 @@ const setName = (req, res) => {
   return res;
 };
 
-
 // function to handle requests search for a name and return the object
 // controller functions in Express receive the full HTTP request
 // and a pre-filled out response object to send
@@ -179,7 +179,7 @@ const searchName = (req, res) => {
   // request body because they aren't a query
   // POSTS send data to add while GETS query for a page or data (such as a search)
   if (!req.query.name) {
-    return res.json({ error: 'Name is required to perform a search' });
+    return res.json({ error: "Name is required to perform a search" });
   }
 
   // Call our Cat's static findByName function.
@@ -198,7 +198,7 @@ const searchName = (req, res) => {
     // if no matches, let them know
     // (does not necessarily have to be an error since technically it worked correctly)
     if (!doc) {
-      return res.json({ error: 'No cats found' });
+      return res.json({ error: "No cats found" });
     }
 
     // if a match, send the match back
@@ -226,7 +226,9 @@ const updateLast = (req, res) => {
   const savePromise = lastAdded.save();
 
   // send back the name as a success for now
-  savePromise.then(() => res.json({ name: lastAdded.name, beds: lastAdded.bedsOwned }));
+  savePromise.then(() =>
+    res.json({ name: lastAdded.name, beds: lastAdded.bedsOwned })
+  );
 
   // if save error, just return an error for now
   savePromise.catch(err => res.json({ err }));
@@ -242,8 +244,8 @@ const notFound = (req, res) => {
   // in the app.js as jade. Calling res.render('index')
   // actually calls index.jade. A second parameter of JSON can be passed into
   // the jade to be used as variables with #{varName}
-  res.status(404).render('notFound', {
-    page: req.url,
+  res.status(404).render("notFound", {
+    page: req.url
   });
 };
 
@@ -258,5 +260,5 @@ module.exports = {
   setName,
   updateLast,
   searchName,
-  notFound,
+  notFound
 };
