@@ -4,17 +4,17 @@ const models = require("../models");
 //get dog model
 const Dog = models.Dog.DogModel;
 
-// default fake data so that we have something to work with until we make a real Cat
+// default fake data so that we have something to work with until we make a real dog
 const dogsDefaultData = {
   name: "unknown",
   breed: "unknown",
   age: 0
 };
 
-// object for us to keep track of the last Cat we made and dynamically update it sometimes
+// object for us to keep track of the last dog we made and dynamically update it sometimes
 let lastDogAdded = new Dog(dogsDefaultData);
 
-// function to find all cats on request.
+// function to find all dogs on request.
 // Express functions always receive the request and the response.
 const readAllDogs = (req, res, callback) => {
   // Call the model's built in find function and provide it a
@@ -27,7 +27,7 @@ const readAllDogs = (req, res, callback) => {
   Dog.find(callback);
 };
 
-// function to find a specific cat on request.
+// function to find a specific dog on request.
 // Express functions always receive the request and the response.
 const readDog = (req, res) => {
   const name1 = req.query.name;
@@ -43,9 +43,9 @@ const readDog = (req, res) => {
     return res.json(doc);
   };
 
-  // Call the static function attached to CatModels.
+  // Call the static function attached to DogModels.
   // This was defined in the Schema in the Model file.
-  // This is a custom static function added to the CatModel
+  // This is a custom static function added to the DogModel
   // Behind the scenes this runs the findOne method.
   // You can find the findByName function in the model file.
   Dog.findByName(name1, callback);
@@ -64,16 +64,6 @@ const hostPage4 = (req, res) => {
   };
 
   readAllDogs(req, res, callback);
-};
-
-// function to handle get request to send the name
-// controller functions in Express receive the full HTTP request
-// and a pre-filled out response object to send
-const getDogName = (req, res) => {
-  // res.json returns json to the page.
-  // Since this sends back the data through HTTP
-  // you can't send any more data to this user until the next response
-  res.json({ name: lastDogAdded.name });
 };
 
 // function to handle a request to set the name
@@ -101,14 +91,14 @@ const setDogName = (req, res) => {
     age: req.body.age
   };
 
-  // create a new object of CatModel with the object to save
+  // create a new object of DogModel with the object to save
   const newDog = new Dog(dogData);
 
   // create new save promise for the database
   const savePromise = newDog.save();
 
   savePromise.then(() => {
-    // set the lastDogAdded cat to our newest cat object.
+    // set the lastDogAdded dog to our newest dog object.
     // This way we can update it dynamically
     lastDogAdded = newDog;
     // return success
@@ -140,9 +130,9 @@ const searchDogName = (req, res) => {
     return res.json({ error: "Name is required to perform a search" });
   }
 
-  // Call our Cat's static findByName function.
+  // Call our dog's static findByName function.
   // Since this is a static function, we can just call it without an object
-  // pass in a callback (like we specified in the Cat model
+  // pass in a callback (like we specified in the dog model
   // Normally would you break this code up, but I'm trying to keep it
   // together so it's easier to see how the system works
   // For that reason, I gave it an anonymous callback instead of a
@@ -156,11 +146,8 @@ const searchDogName = (req, res) => {
     // if no matches, let them know
     // (does not necessarily have to be an error since technically it worked correctly)
     if (!doc) {
-      return res.json({ error: "No dogs found" });
+      return res.json({ error: "That dog does not exist" });
     }
-
-    //if is a match incrase its age
-    //let dogsAge = doc.age + 1;
 
     lastDogAdded = doc;
     lastDogAdded.age++;
@@ -187,7 +174,6 @@ const searchDogName = (req, res) => {
 module.exports = {
   page4: hostPage4,
   readDog,
-  getDogName,
   setDogName,
   searchDogName
 };
